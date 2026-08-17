@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import Payment from "../models/paymentModel.js"
-import razorpay from "../index.js"
 import User from "../models/userModel.js"
+import { razorpay } from '../app.js'
 
 
 
