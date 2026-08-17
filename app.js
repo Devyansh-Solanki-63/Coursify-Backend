@@ -34,7 +34,7 @@ app.use("/home", (req, res) => {
 let isDBConnected = false
 app.use(async (req, res, next) => {
     if (!isDBConnected) {
-        isDBConnected = dbConnection();
+        isDBConnected = await dbConnection();
     }
     next();
 })
