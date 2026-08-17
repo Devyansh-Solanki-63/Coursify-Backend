@@ -14,11 +14,6 @@ import paymentRoutes from "./routes/paymentRoutes.js"
 import miscRoutes from './routes/miscellaneousRoutes.js'
 
 
-let isDBConnected = false
-if (!isDBConnected) {
-    isDBConnected = dbConnection();
-}
-
 const app = express()
 
 // ------------------------ express middlewares
@@ -36,6 +31,14 @@ app.use("/home", (req, res) => {
     res.send("hello")
 })
 
+let isDBConnected = false
+app.use(async (req, res, next) => {
+    if (!isDBConnected) {
+        isDBConnected = dbConnection();
+    }
+    next();
+})
+
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/courses", courseRoutes)
 app.use("/api/v1/courses/lectures", lectureRoutes)
@@ -47,9 +50,9 @@ app.all('*', (req, res) => {
 })
 
 // cloudinary configuration          
-cloudinary.v2.config({ 
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-    api_key: process.env.CLOUDINARY_API_KEY, 
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
