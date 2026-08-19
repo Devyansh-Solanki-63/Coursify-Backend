@@ -1,6 +1,11 @@
 import "dotenv/config";
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 // Read dynamic URL or fallback to defaults based on NODE_ENV
 const server_url = process.env.PROD === 'true'
@@ -38,7 +43,7 @@ const options = {
       },
     },
   },
-  apis: ['../swagger-docs/*.yaml'],
+  apis: [path.join(dirname, '../swagger-docs/*.yaml')],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
