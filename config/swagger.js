@@ -2,9 +2,9 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 // Read dynamic URL or fallback to defaults based on NODE_ENV
-const SERVER_URL = process.env.PROD === 'true'
-  ? process.env.CLIENT_URL
-  : "http://localhost:5000";
+const server_url = process.env.PROD === 'true'
+  ? process.env.SERVER_URL
+  : process.env.SERVER_LOCAL_URL;
 
 const options = {
   definition: {
@@ -23,7 +23,7 @@ const options = {
     ],
     servers: [
       {
-        url: SERVER_URL,
+        url: server_url,
         description: process.env.PROD === 'true' ? 'Production server' : 'Development server',
       },
     ],
