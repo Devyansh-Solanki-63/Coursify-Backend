@@ -11,7 +11,7 @@ import userRoutes from "./routes/userRoutes.js"
 import courseRoutes from "./routes/courseRoutes.js"
 import lectureRoutes from "./routes/lectureRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js"
-import miscRoutes from './routes/miscellaneousRoutes.js'
+import miscRoutes from "./routes/miscellaneousRoutes.js"
 import setupSwagger from "./config/swagger.js"
 
 
