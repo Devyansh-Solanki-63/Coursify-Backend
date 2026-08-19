@@ -1,0 +1,118 @@
+paths:
+  /api/v1/courses:
+    get:
+      summary: Get all courses (excluding lectures)
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: All courses fetched successfully
+        '400':
+          description: Error fetching courses
+
+    post:
+      summary: Create a new course
+      tags:
+        - Courses
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - category
+                - createdBy
+              properties:
+                title:
+                  type: string
+                  example: Full Stack Web Development
+                description:
+                  type: string
+                  example: Master MERN stack development from scratch.
+                category:
+                  type: string
+                  example: Web Development
+                createdBy:
+                  type: string
+                  example: John Doe
+                thumbnail:
+                  type: string
+                  format: binary
+                  description: Optional course thumbnail image file
+      responses:
+        '200':
+          description: Course created successfully
+        '400':
+          description: Missing mandatory fields or creation error
+
+  /api/v1/courses/{courseId}:
+    put:
+      summary: Update an existing course
+      tags:
+        - Courses
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+          description: ID of the course to update
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - category
+                - createdBy
+              properties:
+                title:
+                  type: string
+                  example: Advanced Full Stack Web Development
+                description:
+                  type: string
+                  example: Updated description for the course.
+                category:
+                  type: string
+                  example: Software Engineering
+                createdBy:
+                  type: string
+                  example: John Doe
+                thumbnail:
+                  type: string
+                  format: binary
+                  description: Optional new course thumbnail image file
+      responses:
+        '200':
+          description: Course updated successfully
+        '400':
+          description: Missing mandatory fields, course not found, or update error
+
+    delete:
+      summary: Delete a course by ID
+      tags:
+        - Courses
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+          description: ID of the course to delete
+      responses:
+        '200':
+          description: Course deleted successfully
+        '400':
+          description: Course does not exist or deletion error

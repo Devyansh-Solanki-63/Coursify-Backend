@@ -1,0 +1,47 @@
+paths:
+  /api/v1/contact:
+    post:
+      summary: Send a contact us message
+      tags:
+        - Miscellaneous
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - message
+              properties:
+                name:
+                  type: string
+                  example: Jane Doe
+                email:
+                  type: string
+                  format: email
+                  example: jane@example.com
+                message:
+                  type: string
+                  example: I have a inquiry regarding the MERN course syllabus.
+      responses:
+        '200':
+          description: Request submitted successfully
+        '400':
+          description: Missing required fields or failed to send email
+
+  /api/v1/admin/stats/users:
+    get:
+      summary: Get user statistics and active subscriptions count (Admin Only)
+      tags:
+        - Miscellaneous
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Successfully fetched user metrics
+        '401':
+          description: Unauthorized access
+        '403':
+          description: Forbidden - Admin access required

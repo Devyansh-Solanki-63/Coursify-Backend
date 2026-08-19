@@ -12,6 +12,7 @@ import courseRoutes from "./routes/courseRoutes.js"
 import lectureRoutes from "./routes/lectureRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js"
 import miscRoutes from './routes/miscellaneousRoutes.js'
+import setupSwagger from "./config/swagger.js"
 
 
 const app = express()
@@ -26,6 +27,9 @@ app.use(cookieParser())
 // ------------------------ express middlewares
 
 app.use(morgan('dev'))
+
+// setting up api documentation with swagger
+setupSwagger(app)
 
 app.use("/home", (req, res) => {
     res.send("hello")

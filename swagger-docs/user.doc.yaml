@@ -1,0 +1,188 @@
+paths:
+  /api/v1/user/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: test@123
+                avatar:
+                  type: string
+                  format: binary
+                  description: Optional profile picture image file
+      responses:
+        '200':
+          description: User registered successfully and logged in
+        '400':
+          description: Missing mandatory fields, invalid email, or user already exists
+
+  /api/v1/user/login:
+    post:
+      summary: Login user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: test@123
+      responses:
+        '200':
+          description: User logged-in successfully
+        '400':
+          description: Missing fields, user doesn't exist, or incorrect password
+
+  /api/v1/user/logout:
+    get:
+      summary: Logout user
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User logged-out successfully
+        '400':
+          description: Error logging out
+
+  /api/v1/user/check-token:
+    get:
+      summary: Check user authentication status token
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Token is valid, returns user details
+        '400':
+          description: You are not logged-in
+
+  /api/v1/user/profile:
+    get:
+      summary: Get current user profile
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+        '400':
+          description: User no longer exists or unauthenticated
+
+  /api/v1/user/forgot:
+    post:
+      summary: Request password reset link
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+      responses:
+        '200':
+          description: Reset password URL sent to email
+        '400':
+          description: Email not registered or email sending failed
+
+  /api/v1/user/reset/{resetToken}:
+    post:
+      summary: Reset password using token
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: resetToken
+          required: true
+          schema:
+            type: string
+          description: Password reset token received in email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  format: password
+                  minLength: 4
+                  example: newSecret123
+      responses:
+        '200':
+          description: Password updated successfully
+        '400':
+          description: Invalid/expired token or password under 4 characters
+
+  /api/v1/user/update-profile:
+    put:
+      summary: Update profile details and optional avatar
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: John Updated
+                avatar:
+                  type: string
+                  format: binary
+                  description: Optional new avatar file
+      responses:
+        '200':
+          description: Profile updated successfully
+        '400':
+          description: Missing name parameter or upload error

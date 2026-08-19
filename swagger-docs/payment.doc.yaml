@@ -1,0 +1,108 @@
+paths:
+  /api/v1/payments:
+    get:
+      summary: Get all payments and subscription analytics (Admin)
+      tags:
+        - Payments
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: query
+          name: count
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Number of subscription records to retrieve
+      responses:
+        '200':
+          description: Returns list of subscriptions and monthly sales analytics
+        '400':
+          description: Error fetching payments or unauthorized access
+
+  /api/v1/payments/razorpaykey:
+    get:
+      summary: Get Razorpay API public key
+      tags:
+        - Payments
+      responses:
+        '200':
+          description: Returns Razorpay API key successfully
+        '400':
+          description: Error fetching Razorpay key
+
+  /api/v1/payments/subscribe:
+    post:
+      summary: Create a subscription plan
+      tags:
+        - Payments
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - planType
+              properties:
+                planType:
+                  type: string
+                  enum:
+                    - monthly
+                    - halfYearly
+                    - yearly
+                  example: monthly
+                  description: Select subscription billing duration
+      responses:
+        '200':
+          description: Subscription created successfully, returns subscription ID
+        '400':
+          description: Invalid plan type or subscription creation failed
+
+  /api/v1/payments/verify:
+    post:
+      summary: Verify Razorpay subscription payment
+      tags:
+        - Payments
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - razorpay_payment_id
+                - razorpay_subscription_id
+                - razorpay_signature
+              properties:
+                razorpay_payment_id:
+                  type: string
+                  example: pay_L1234567890abc
+                razorpay_subscription_id:
+                  type: string
+                  example: sub_M1234567890xyz
+                razorpay_signature:
+                  type: string
+                  example: e99a0db8d2a159f81a7d6e...
+      responses:
+        '200':
+          description: Payment verified successfully, subscription activated
+        '400':
+          description: Signature verification failed or payment invalid
+
+  /api/v1/payments/unsubscribe:
+    post:
+      summary: Cancel current active subscription
+      tags:
+        - Payments
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Subscription cancelled successfully
+        '400':
+          description: User has no active subscription or cancellation failed

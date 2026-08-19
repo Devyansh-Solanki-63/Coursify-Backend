@@ -1,0 +1,127 @@
+paths:
+  /api/v1/courses/lectures/{courseId}:
+    get:
+      summary: Get all lectures for a specific course
+      tags:
+        - Lectures
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+          description: ID of the course to retrieve lectures from
+      responses:
+        '200':
+          description: Lectures fetched successfully
+        '400':
+          description: Course does not exist or fetch error
+
+    post:
+      summary: Create a new lecture under a course
+      tags:
+        - Lectures
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+          description: ID of the course where the lecture will be added
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+              properties:
+                title:
+                  type: string
+                  example: Introduction to Express Middleware
+                description:
+                  type: string
+                  example: Learn how custom and built-in middleware work in Express.js.
+                lecture:
+                  type: string
+                  format: binary
+                  description: Video file for the lecture
+      responses:
+        '200':
+          description: Lecture created successfully
+        '400':
+          description: Missing required fields or course not found
+
+  /api/v1/courses/lectures/{courseId}/{lectureNumber}:
+    put:
+      summary: Update a specific lecture in a course
+      tags:
+        - Lectures
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+          description: ID of the course
+        - in: path
+          name: lectureNumber
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: 1-based index/number of the lecture to update
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Advanced Express Middleware Concepts
+                description:
+                  type: string
+                  example: Updated description for the lecture.
+                lecture:
+                  type: string
+                  format: binary
+                  description: Optional new video file to replace the existing lecture video
+      responses:
+        '200':
+          description: Lecture updated successfully
+        '400':
+          description: Invalid lecture number, course not found, or missing update data
+
+    delete:
+      summary: Delete a specific lecture from a course
+      tags:
+        - Lectures
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+          description: ID of the course
+        - in: path
+          name: lectureNumber
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: 1-based index/number of the lecture to delete
+      responses:
+        '200':
+          description: Lecture deleted successfully
+        '400':
+          description: Course not found or invalid lecture number provided
